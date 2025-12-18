@@ -79,16 +79,28 @@ describe('HomeView.vue', () => {
 
   beforeEach(async () => {
     wrapper = mount(HomeView);
-    // Esperar que onMounted y fetchPokemons se ejecuten
-    await nextTick();
-    await new Promise((r) => setTimeout(r, 0)); // permitir que Promise.all se resuelva
+    await nextTick(); // permite que onMounted() se ejecute
+    await new Promise((r) => setTimeout(r, 0)); // resolver Promise.all
     await nextTick();
   });
 
-  it('muestra estado de carga inicialmente', () => {
-    const loadingDiv = wrapper.find('.loading-state');
-    expect(loadingDiv.exists() || true).toBe(true); // al montarse, puede mostrar carga
+it('muestra estado de carga inicialmente', async () => {
+  const wrapper = mount(HomeView, {
+    data() {
+      return {
+        isLoading: true, // Forzamos que el estado de carga esté activo
+      };
+    },
   });
+
+  await nextTick();
+
+  const loadingDiv = wrapper.find('.loading-state');
+  expect(loadingDiv.exists()).toBe(true);
+});
+
+
+
 
   it('renderiza la lista de pokémon', () => {
     const html = wrapper.html();
